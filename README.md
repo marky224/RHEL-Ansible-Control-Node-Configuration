@@ -1,7 +1,7 @@
 # RHEL Ansible Control Node Setup
 
 ## Overview
-This repository automates provisioning of a **Red Hat Enterprise Linux (RHEL) 9** virtual machine as an Ansible control node at `192.168.10.100`. It’s part of a larger **Virtual Network Project**, managing remote PCs (Linux and Windows) via Ansible for IT support tasks like monitoring and administration.
+This repository automates provisioning of a **Red Hat Enterprise Linux (RHEL) 9** virtual machine as an Ansible control node at `192.168.0.100`. It’s part of a larger **Virtual Network Project**, managing remote PCs (Linux and Windows) via Ansible for IT support tasks like monitoring and administration.
 
 ## Features
 - **Ansible Control Node**: Configures RHEL 9 to manage remote nodes via SSH (Linux) and WinRM (Windows).
@@ -12,7 +12,7 @@ This repository automates provisioning of a **Red Hat Enterprise Linux (RHEL) 9*
 Provisioning a Linux server as an Ansible control node typically involves these steps:
 
 1. **Configure Networking**:
-   - Assign a static IP address (e.g., `192.168.10.100`) within the network.
+   - Assign a static IP address (e.g., `192.168.0.100`) within the network.
    - Set the gateway and DNS servers to ensure connectivity.
 2. **Install Base Dependencies**:
    - Update the system and install essential tools (e.g., `python3`, `curl`, `openssl`).
@@ -34,14 +34,14 @@ This process ensures the server can manage remote systems effectively, leveragin
 - **Control Node**:
   - RHEL 9 VM in VMware Workstation (4GB+ RAM, 4+ CPU Cores, 50GB+ disk).
   - Red Hat subscription for RHEL repositories.
-  - Subnet: `192.168.10.0/24`, Gateway: `192.168.10.1`.
+  - Subnet: `192.168.0.0/24`, Gateway: `192.168.0.1`.
 
 ## Script Files
 
 | File Name                  | Purpose                                                                 |
 |----------------------------|-------------------------------------------------------------------------|
 | `01-setup_logging.sh`      | Initializes logging to `/var/log/ansible_control_setup.log` with rotation. |
-| `02-configure_network.sh`  | Sets static IP `192.168.10.100`, gateway `192.168.10.1`, and DNS (`8.8.8.8`, `8.8.4.4`). |
+| `02-configure_network.sh`  | Sets static IP `192.168.0.100`, gateway `192.168.0.1`, and DNS (`8.8.8.8`, `8.8.4.4`). |
 | `03-install_ansible.sh`    | Installs Ansible and `pywinrm` via `pip`, handles Red Hat subscription. |
 | `04-configure_ssh.sh`      | Generates SSH keys and configures `sshd` for key-based authentication.  |
 | `05-configure_firewall.sh` | Configures firewall to allow SSH (port 22).                             |
