@@ -68,3 +68,8 @@ This process ensures the server can manage remote systems effectively, leveragin
    ```
 ## Verify Setup
 -  **Control Node**:
+   ```bash
+   ansible --version
+   ip addr show | grep 192.168.0.100
+   cat /var/log/ansible_control_setup.log | tail -n 5
+   ```
