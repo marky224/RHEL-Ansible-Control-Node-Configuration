@@ -4,8 +4,8 @@
 
 source ./setup_logging.sh
 
-CONTROL_NODE_IP="192.168.10.100"
-GATEWAY_IP="192.168.10.1"
+CONTROL_NODE_IP="192.168.0.100"
+GATEWAY_IP="192.168.0.1"
 TIMEOUT=30
 
 # Dynamically detect active interface
