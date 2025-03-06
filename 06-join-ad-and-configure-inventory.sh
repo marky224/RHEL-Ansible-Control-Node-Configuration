@@ -12,7 +12,7 @@ AD_DOMAIN="msp.local"
 AD_SERVER_IP="192.168.0.10"
 AD_ADMIN_USER="Administrator@$AD_DOMAIN"
 RHEL_IP="192.168.0.100"
-CERT_DEST="/etc/pki/tls/certs/win2025_cert.pem"
+CERT_DEST="/etc/pki/tls/certs/addc01_msp_cert.pem"
 
 # Prompt for AD admin password securely
 read -s -p "Enter AD Administrator password: " AD_ADMIN_PASS
@@ -23,7 +23,7 @@ read -s -p "Enter Ansible Vault password (for local encryption): " VAULT_PASS
 echo ""
 
 # Prompt for PEM file path
-read -p "Enter the path to the WinRM HTTPS certificate PEM file (e.g., /tmp/win2025_cert.pem): " PEM_PATH
+read -p "Enter the path to the WinRM HTTPS certificate PEM file (e.g., /tmp/addc01_msp_cert.pem): " PEM_PATH
 if [ ! -f "$PEM_PATH" ]; then
     echo "Error: PEM file not found at $PEM_PATH" | tee -a "$LOG_FILE"
     exit 1
@@ -84,7 +84,7 @@ cat <<EOF | sudo tee /etc/ansible/inventory.ini
 rhel9-control ansible_host=$RHEL_IP ansible_user=$AD_ADMIN_USER ansible_connection=ssh
 
 [windows_nodes]
-win2025 ansible_host=$AD_SERVER_IP ansible_user=$AD_ADMIN_USER ansible_connection=winrm ansible_winrm_transport=ntlm ansible_port=5986 ansible_winrm_scheme=https ansible_winrm_ca_trust_path=$CERT_DEST $ENCRYPTED_PASS
+ADDC01-msp ansible_host=$AD_SERVER_IP ansible_user=$AD_ADMIN_USER ansible_connection=winrm ansible_winrm_transport=ntlm ansible_port=5986 ansible_winrm_scheme=https ansible_winrm_ca_trust_path=$CERT_DEST $ENCRYPTED_PASS
 EOF
 sudo chmod 644 /etc/ansible/inventory.ini
 echo "$(date) - Ansible inventory created with WinRM HTTPS and Vault encryption" >> "$LOG_FILE"
