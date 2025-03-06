@@ -1,7 +1,4 @@
 #!/bin/bash
-# 06-join-ad-and-configure-inventory.sh
-# This script handles AD joining, Ansible Vault setup, and inventory creation.
-
 
 # Enable logging
 LOG_FILE="/var/log/rhel_ad_join.log"
@@ -15,10 +12,22 @@ AD_DOMAIN="msp.local"
 AD_SERVER_IP="192.168.0.10"
 AD_ADMIN_USER="Administrator@$AD_DOMAIN"
 RHEL_IP="192.168.0.100"
+CERT_DEST="/etc/pki/tls/certs/win2025_cert.pem"
 
 # Prompt for AD admin password securely
 read -s -p "Enter AD Administrator password: " AD_ADMIN_PASS
-echo "" # Newline after password input
+echo ""
+
+# Prompt for Ansible Vault password securely
+read -s -p "Enter Ansible Vault password (for local encryption): " VAULT_PASS
+echo ""
+
+# Prompt for PEM file path
+read -p "Enter the path to the WinRM HTTPS certificate PEM file (e.g., /tmp/win2025_cert.pem): " PEM_PATH
+if [ ! -f "$PEM_PATH" ]; then
+    echo "Error: PEM file not found at $PEM_PATH" | tee -a "$LOG_FILE"
+    exit 1
+fi
 
 # Install AD integration packages
 sudo dnf install -y realmd sssd oddjob oddjob-mkhomedir samba-common-tools krb5-workstation chrony >> "$LOG_FILE" 2>&1 || { echo "Package install failed" >> "$LOG_FILE"; exit 1; }
@@ -42,24 +51,43 @@ echo "$(date) - Successfully joined $AD_DOMAIN" >> "$LOG_FILE"
 sudo authselect select sssd with-mkhomedir --force >> "$LOG_FILE" 2>&1
 echo "$(date) - SSSD configured with home directory creation" >> "$LOG_FILE"
 
-# Configure Ansible Vault with the password
-echo "$AD_ADMIN_PASS" | ansible-vault encrypt_string --name 'ansible_password' > /etc/ansible/vault_password.yml
-echo "$(date) - Ansible Vault configured" >> "$LOG_FILE"
+# Save and secure the Ansible Vault password
+echo "$VAULT_PASS" | sudo tee /etc/ansible/vault_pass.txt > /dev/null
+sudo chmod 600 /etc/ansible/vault_pass.txt
+sudo chown root:root /etc/ansible/vault_pass.txt
+echo "$(date) - Ansible Vault password saved securely" >> "$LOG_FILE"
 
-# Create inventory file with encrypted password reference
+# Encrypt the AD password with Ansible Vault
+ENCRYPTED_PASS=$(ansible-vault encrypt_string --vault-id /etc/ansible/vault_pass.txt "$AD_ADMIN_PASS" --name 'ansible_password' | grep -v 'Encryption successful')
+
+# Copy and secure the PEM certificate
+sudo cp "$PEM_PATH" "$CERT_DEST"
+sudo chmod 644 "$CERT_DEST"
+sudo chown root:root "$CERT_DEST"
+sudo update-ca-trust
+echo "$(date) - WinRM HTTPS certificate saved and trusted at $CERT_DEST" >> "$LOG_FILE"
+
+# Configure Ansible (overwrite existing ansible.cfg if present)
+sudo mkdir -p /etc/ansible
+cat <<EOF | sudo tee /etc/ansible/ansible.cfg
+[defaults]
+inventory = /etc/ansible/inventory.ini
+host_key_checking = False
+log_path = /var/log/ansible.log
+vault_password_file = /etc/ansible/vault_pass.txt
+EOF
+echo "$(date) - Ansible configuration updated" >> "$LOG_FILE"
+
+# Create inventory file with HTTPS for WinRM
 cat <<EOF | sudo tee /etc/ansible/inventory.ini
 [linux_nodes]
 rhel9-control ansible_host=$RHEL_IP ansible_user=$AD_ADMIN_USER ansible_connection=ssh
 
 [windows_nodes]
-win2025 ansible_host=$AD_SERVER_IP ansible_user=$AD_ADMIN_USER ansible_connection=winrm ansible_winrm_transport=ntlm ansible_port=5985 ansible_winrm_scheme=http ansible_password={{ ansible_password }}
+win2025 ansible_host=$AD_SERVER_IP ansible_user=$AD_ADMIN_USER ansible_connection=winrm ansible_winrm_transport=ntlm ansible_port=5986 ansible_winrm_scheme=https ansible_winrm_ca_trust_path=$CERT_DEST $ENCRYPTED_PASS
 EOF
-echo "$(date) - Ansible inventory created" >> "$LOG_FILE"
-
-# Secure permissions
-sudo chmod 600 /etc/ansible/vault_password.yml
 sudo chmod 644 /etc/ansible/inventory.ini
-sudo chown root:root /etc/ansible/vault_password.yml /etc/ansible/inventory.ini
+echo "$(date) - Ansible inventory created with WinRM HTTPS and Vault encryption" >> "$LOG_FILE"
 
 echo "$(date) - RHEL 9 AD join and inventory configuration complete" >> "$LOG_FILE"
-echo "Setup complete. Use 'ansible --vault-id /etc/ansible/vault_password.yml' for commands requiring the vault."
+echo "Setup complete. Use 'ansible --vault-id /etc/ansible/vault_pass.txt' for commands requiring the vault."
