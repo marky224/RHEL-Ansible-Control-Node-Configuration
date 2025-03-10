@@ -54,7 +54,7 @@ cd /root/ansible_project/control-node-setup-ansible
 
 ### 2. Run the Main Setup Script
 
-- Run 'main.sh' to initialize and configure the control node in one step:
+- Run `main.sh` to initialize and configure the control node in one step:
 ```bash
 chmod +x control-node-setup/main.sh
 ./control-node-setup/main.sh
@@ -64,14 +64,14 @@ chmod +x control-node-setup/main.sh
 
 ### 3. Verify the Setup
 
-- **Check logs**: 'cat /var/log/ansible_main.log' (or '/var/log/ansible_config.log' for details).
-- **Verify Ansible**: 'ansible --version'
-- **Test network**: 'ip addr'
-- **Check SSH**: 'systemctl status sshd'
+- **Check logs**: `cat /var/log/ansible_main.log` (or `/var/log/ansible_config.log` for details).
+- **Verify Ansible**: `ansible --version`
+- **Test network**: `ip addr`
+- **Check SSH**: `systemctl status sshd`
 
 ### 4. Configure Managed Nodes (Optional)
 
-- Update 'inventory/inventory.yml' with managed node IPs.
+- Update `inventory/inventory.yml` with managed node IPs.
 - Run the managed node playbook:
 ```bash
 cd playbooks
