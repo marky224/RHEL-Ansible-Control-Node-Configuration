@@ -20,6 +20,29 @@ The setup process is divided into two main scripts:
 1. **01-initialize_ansible_control_node.sh**: Prepares the server by installing necessary packages and setting up the Ansible environment.
 2. **02-configure_ansible_control_node.sh**: Configures the Ansible control node by collecting user inputs and running the initial playbook.
 
+## File Structure
+
+```
+RHEL-Ansible-Node-Configurations/
+└── control-node-setup-ansible/
+    ├── control-node-setup/
+    │   ├── vars/
+    │   │   └── control_node_vars.yml       # Templated sensitive vars for control node
+    │   ├── 01-initialize_ansible_control_node.sh  # Initialization script
+    │   ├── 02-configure_ansible_control_node.sh   # Configuration script
+    │   └── main.sh                         # Likely a main orchestration script
+    ├── inventory/
+    │   └── inventory.yml                   # Initial inventory with localhost
+    ├── managed-node-setup/
+    │   ├── vars/
+    │   │   └── remote_node_vars.yml        # Templated sensitive vars for managed nodes
+    ├── playbooks/
+    │   ├── control_node_setup.yml          # Playbook for control node
+    │   └── managed_node_setup.yml          # Playbook for managed nodes (previously remote_node_setup.yml)
+    ├── readme.md                           # Documentation
+    └── site.yml                            # Master playbook (assumed from previous mention)
+```
+
 ## Detailed Steps
 
 ### 1. Initialize the Ansible Control Node
