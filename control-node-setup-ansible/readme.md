@@ -93,9 +93,9 @@ ansible-playbook remote_node_setup.yml -i ../inventory.yml
 ## Logging
 
 Logs for each script execution are stored in:
-- Initialization log: /var/log/ansible_init.log
-- Configuration log: /var/log/ansible_config.log
-Review these logs to troubleshoot any issues during the setup process.
+- Initialization log: `/var/log/ansible_init.log`
+- Configuration log: `/var/log/ansible_config.log`
+- Review these logs to troubleshoot any issues during the setup process.
 
 ## Security Considerations
 
