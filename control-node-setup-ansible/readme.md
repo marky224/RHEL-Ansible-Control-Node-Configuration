@@ -30,7 +30,7 @@ RHEL-Ansible-Node-Configurations/
     │   │   └── control_node_vars.yml       # Templated sensitive vars for control node
     │   ├── 01-initialize_ansible_control_node.sh  # Initialization script
     │   ├── 02-configure_ansible_control_node.sh   # Configuration script
-    │   └── main.sh                         # Likely a main orchestration script
+    │   └── main.sh                         # # Runs 01- and 02- scripts in sequence
     ├── inventory/
     │   └── inventory.yml                   # Initial inventory with localhost
     ├── managed-node-setup/
