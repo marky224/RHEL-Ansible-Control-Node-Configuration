@@ -1,8 +1,0 @@
-# Template variables for control node (fill in your values)
-sub_username: "<your-redhat-username>"
-sub_password: "<your-redhat-password>"
-ssh_private_key: |
-  # Replace with your SSH private key
-  -----BEGIN RSA PRIVATE KEY-----
-  <your-actual-private-key-here>
-  -----END RSA PRIVATE KEY-----
