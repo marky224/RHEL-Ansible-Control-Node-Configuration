@@ -88,6 +88,15 @@ sudo bash 02-configure_ansible_control_node.sh
 ```
 **Note**: Ensure the script is executed with root privileges.
 
+### 3. Configure Managed Nodes (Optional)
+
+- Update inventory/inventory.yml with managed node IPs.
+- Run the managed node playbook:
+```bash
+cd playbooks
+ansible-playbook managed_node_setup.yml -i ../inventory/inventory.yml
+```
+
 ## Post-Setup Instructions
 
 After completing the setup:
