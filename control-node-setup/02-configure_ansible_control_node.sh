@@ -1,5 +1,5 @@
 #!/bin/bash
-# configure_ansible_control_node.sh
+# 02-configure_ansible_control_node.sh
 # Configures Ansible control node after initialization by prompting for credentials,
 # setting up inventory, and running the playbook
 
