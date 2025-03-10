@@ -1,5 +1,5 @@
 #!/bin/bash
-# initialize_ansible_control_node.sh
+# 01-initialize_ansible_control_node.sh
 # Initializes Ansible on a newly provisioned RHEL 9 server to act as a control node
 
 # Exit on any error
