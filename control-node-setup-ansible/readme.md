@@ -7,18 +7,18 @@ This repository provides Bash scripts and Ansible playbooks to automate the prov
 - Prompting for Red Hat subscription details.
 - Automatically integrating the generated private RSA key into `vars/control_node_vars.yml`.
 
+### Directory Details
+- **`control-node-setup/`**: Scripts and sensitive vars for initializing and configuring the Ansible control node.
+  - `main.sh`: Orchestrates the setup by running `01-initialize_ansible_control_node.sh` and `02-configure_ansible_control_node.sh`.
+- **`inventory/`**: Contains the inventory file, starting with `localhost`, to be updated with managed nodes later.
+- **`managed-node-setup/`**: Sensitive vars for managed nodes (playbook is in `playbooks/`).
+- **`playbooks/`**: Ansible playbooks for control and managed node configurations.
+
 ## Prerequisites
 
 - A freshly provisioned RHEL 9 server.
 - Root access to the server.
 - An active Red Hat subscription.
-
-## Setup Overview
-
-The setup process is divided into two main scripts:
-
-1. **01-initialize_ansible_control_node.sh**: Prepares the server by installing necessary packages and setting up the Ansible environment.
-2. **02-configure_ansible_control_node.sh**: Configures the Ansible control node by collecting user inputs and running the initial playbook.
 
 ## File Structure
 
@@ -45,52 +45,33 @@ RHEL-Ansible-Node-Configurations/
 
 ## Detailed Steps
 
-### 1. Initialize the Ansible Control Node
-
-**Script**: `01-initialize_ansible_control_node.sh`
-
-**Purpose**: Sets up the server with essential packages and prepares the Ansible environment.
-
-**Actions**:
-
-- Updates system packages.
-- Installs prerequisites: `python3`, `pip`, and `git`.
-- Installs Ansible using `pip`.
-- Configures the environment to include Ansible in the system PATH.
-- Sets up the Ansible project directory.
-- Clones the specified GitHub repository or creates the necessary directory structure.
-
-**Usage**:
+### 1. Clone the Repository
 
 ```bash
-sudo bash 01-initialize_ansible_control_node.sh
+git clone https://github.com/marky224/RHEL-Ansible-Node-Configurations.git /root/ansible_project
+cd /root/ansible_project/control-node-setup-ansible
 ```
-**Note**: Ensure the script is executed with root privileges.
 
-### 2. Configure the Ansible Control Node
+### 2. Run the Main Setup Script
 
-**Script**: '02-configure_ansible_control_node.sh'
-
-**Purpose**: Finalizes the configuration by collecting Red Hat subscription details and setting up the Ansible inventory and playbooks.
-
-**Actions**:
-
-- Prompts the user for Red Hat subscription username and password.
-- Generates an SSH RSA key pair if not already present.
-- Populates vars/control_node_vars.yml with the provided subscription details and the SSH private key.
-- Verifies or creates inventory.yml with the localhost configuration.
-- Executes the control node setup playbook.
-
-**Usage**:
-
+- Run 'main.sh' to initialize and configure the control node in one step:
 ```bash
-sudo bash 02-configure_ansible_control_node.sh
-```
-**Note**: Ensure the script is executed with root privileges.
+chmod +x control-node-setup/main.sh
+./control-node-setup/main.sh
+``` 
+- Prompts: Enter your Red Hat subscription username and password when prompted by 02-configure_ansible_control_node.sh.
+- SSH Key: An RSA key pair will be generated automatically if not present.
 
-### 3. Configure Managed Nodes (Optional)
+### 3. Verify the Setup
 
-- Update inventory/inventory.yml with managed node IPs.
+- **Check logs**: 'cat /var/log/ansible_main.log' (or '/var/log/ansible_config.log' for details).
+- **Verify Ansible**: 'ansible --version'
+- **Test network**: 'ip addr'
+- **Check SSH**: 'systemctl status sshd'
+
+### 4. Configure Managed Nodes (Optional)
+
+- Update 'inventory/inventory.yml' with managed node IPs.
 - Run the managed node playbook:
 ```bash
 cd playbooks
@@ -108,15 +89,17 @@ After completing the setup:
 cd /root/ansible_project/remote-node-setup
 ansible-playbook remote_node_setup.yml -i ../inventory.yml
 ```
+
 ## Logging
+
 Logs for each script execution are stored in:
 - Initialization log: /var/log/ansible_init.log
 - Configuration log: /var/log/ansible_config.log
 Review these logs to troubleshoot any issues during the setup process.
 
 ## Security Considerations
-- Ensure that vars/control_node_vars.yml has appropriate permissions to protect sensitive information:
 
+- Ensure that vars/control_node_vars.yml has appropriate permissions to protect sensitive information:
 ```bash
 chmod 600 /root/ansible_project/vars/control_node_vars.yml
 ```
