@@ -1,4 +1,4 @@
-# ansible-nodes
+# ansible-managed-nodes
 
 This subfolder contains scripts for setting up remote nodes (Linux and Windows) on the network to be managed by an Ansible control node running on Red Hat Enterprise Linux (RHEL). The purpose is to prepare these remote nodes for Ansible management by enabling passwordless SSH (for Linux) or WinRM (for Windows) connectivity, ensuring the control node can initiate and maintain an Ansible connection.
 
