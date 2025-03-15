@@ -67,6 +67,19 @@
         state: present
         executable: pip3
 
+    - name: Enable and start SSH service
+      ansible.builtin.service:
+        name: sshd
+        state: started
+        enabled: yes
+
+    - name: Configure firewall for SSH
+      ansible.posix.firewalld:
+        service: ssh
+        permanent: yes
+        state: enabled
+        immediate: yes
+
     - name: Generate SSH key pair for root
       ansible.builtin.user:
         name: root
@@ -97,19 +110,6 @@
         regexp: "^#?PasswordAuthentication"
         line: "PasswordAuthentication no"
       notify: Restart sshd
-
-    - name: Enable and start SSH service
-      ansible.builtin.service:
-        name: sshd
-        state: started
-        enabled: yes
-
-    - name: Configure firewall for SSH
-      ansible.posix.firewalld:
-        service: ssh
-        permanent: yes
-        state: enabled
-        immediate: yes
 
   handlers:
     - name: Restart sshd
