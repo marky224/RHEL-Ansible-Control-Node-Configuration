@@ -30,12 +30,12 @@ This script configures Linux remote nodes by:
 - Ensuring Python is installed for Ansible compatibility.
 
 #### Usage
-1. Copy `linux_nodes.sh` to the control node or run it from the repository directory.
+1. Copy `config_rhel9_node.sh` or `config_ubuntu_node.sh` to the control node or run it from the repository directory.
 2. Edit the script to specify the target Linux node IP addresses or hostnames and the Ansible user's credentials.
 3. Execute the script:
    ```bash
-   chmod +x linux_nodes.sh
-   ./linux_nodes.sh
+   chmod +x config_ubuntu_node.sh.sh.sh
+   ./config_ubuntu_node.sh.sh.sh
    ```
 4. Verify connectivity from the control node:
     ```bash
