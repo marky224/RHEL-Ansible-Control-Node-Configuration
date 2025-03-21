@@ -17,8 +17,8 @@ Before using the scripts in this subfolder, ensure the following:
 
 ## Structure
 
-- **`linux_nodes.sh`**: Bash script to configure Linux-based remote nodes for Ansible management.
-- **`windows_nodes.ps1`**: PowerShell script to configure Windows-based remote nodes for Ansible management.
+- **`config_ubuntu_node.sh`**/**`config_rhel9_node.sh`**: Bash script to configure Linux-based remote nodes for Ansible management.
+- **`config_windows_node.ps1`**: PowerShell script to configure Windows-based remote nodes for Ansible management.
 
 ## Setup Instructions
 
