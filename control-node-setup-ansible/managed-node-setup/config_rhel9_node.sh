@@ -17,9 +17,9 @@ echo "OS: $(cat /etc/redhat-release)"
 echo "SSH User: $(whoami)"
 echo "SSH Port: $(ss -tuln | grep :22 | awk '{print $5}' | cut -d: -f2 || echo '22')"
 
-# Set static IP to 192.168.10.134
-echo "Setting static IP to 192.168.10.134 on interface $NETWORK_INTERFACE..."
-nmcli con mod "System $NETWORK_INTERFACE" ipv4.addresses 192.168.10.134/24
+# Set static IP to 192.168.10.135
+echo "Setting static IP to 192.168.10.135 on interface $NETWORK_INTERFACE..."
+nmcli con mod "System $NETWORK_INTERFACE" ipv4.addresses 192.168.10.135/24
 nmcli con mod "System $NETWORK_INTERFACE" ipv4.gateway 192.168.10.1
 nmcli con mod "System $NETWORK_INTERFACE" ipv4.method manual
 nmcli con mod "System $NETWORK_INTERFACE" ipv4.dns "8.8.8.8,8.8.4.4"
@@ -32,4 +32,4 @@ echo "IP: $(ip addr show dev $NETWORK_INTERFACE | grep -o 'inet [0-9.]*' | awk '
 echo "OS: $(cat /etc/redhat-release)"
 echo "SSH User: $(whoami)"
 echo "SSH Port: $(ss -tuln | grep :22 | awk '{print $5}' | cut -d: -f2 || echo '22')"
-echo "Static IP set to 192.168.10.134 completed."
+echo "Static IP set to 192.168.10.135 completed."
