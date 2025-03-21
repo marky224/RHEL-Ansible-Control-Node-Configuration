@@ -7,7 +7,7 @@
 set -e
 
 # Variables
-ANSIBLE_DIR="${ANSIBLE_DIR:-/root/ansible_project}"
+ANSIBLE_DIR="${ANSIBLE_DIR:-/etc/ansible}"
 LOG_FILE="/var/log/ansible_config.log"
 VARS_FILE="$ANSIBLE_DIR/vars/control_node_vars.yml"
 INVENTORY_FILE="$ANSIBLE_DIR/inventory.yml"
