@@ -7,7 +7,7 @@ set -e
 
 # Variables
 LOG_FILE="/var/log/ansible_init.log"
-ANSIBLE_DIR="/root/ansible_project"
+ANSIBLE_DIR="/etc/ansible"
 GITHUB_REPO="https://github.com/marky224/RHEL-Ansible-Control-Node-Configuration.git"  # Repo URL
 
 # Function to log messages
