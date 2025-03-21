@@ -34,8 +34,9 @@ RHEL-Ansible-Node-Configurations/
     ├── inventory/
     │   └── inventory.yml                   # Initial inventory with localhost
     ├── managed-node-setup/
-    │   ├── vars/
-    │   │   └── remote_node_vars.yml        # Templated sensitive vars for managed nodes
+    │   └── config_rhel9_node.sh            # Initial configuration for RHEL 9
+    │   └── config_ubuntu_node.sh           # Initial configuration for Ubuntu
+    │   └── config_windows_node.ps1         # Initial configuration for Windows 11
     ├── playbooks/
     │   ├── control_node_setup.yml          # Playbook for control node
     │   └── managed_node_setup.yml          # Playbook for managed nodes (previously remote_node_setup.yml)
