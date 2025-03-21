@@ -46,7 +46,7 @@ fi
 log "Red Hat credentials provided"
 
 # Generate SSH RSA private key if it doesn't exist
-SSH_KEY_FILE="/root/.ssh/id_rsa"
+SSH_KEY_FILE="/etc/.ssh/id_rsa"
 if [ ! -f "$SSH_KEY_FILE" ]; then
     log "Generating SSH RSA key pair..."
     ssh-keygen -t rsa -b 4096 -f "$SSH_KEY_FILE" -N "" || {
