@@ -1,28 +1,42 @@
-- name: Configure RHEL 9 Managed Node
-  hosts: managed_nodes
+- name: Configure RHEL 9 and Ubuntu Managed Nodes
+  hosts: linux_nodes  # Targets only Linux nodes from inventory
   become: yes
   vars:
-    managed_node_ip: "192.168.10.134"
-    gateway_ip: "192.168.10.1"
+    rhel9_node_ip: "192.168.1.134"
+    ubuntu_node_ip: "192.168.1.135"
+    gateway_ip: "192.168.1.1"  # Adjust to your network's gateway
     dns_servers: ["8.8.8.8", "8.8.4.4"]
 
   tasks:
-    - name: Set static IP on managed node
+    - name: Set static IP on RHEL 9 managed node (nmcli)
       ansible.builtin.nmcli:
         conn_name: "{{ ansible_default_ipv4.interface }}"
         type: ethernet
-        ip4: "{{ managed_node_ip }}/24"
+        ip4: "{{ rhel9_node_ip }}/24"
         gw4: "{{ gateway_ip }}"
         dns4: "{{ dns_servers }}"
         state: present
         method4: manual
-      when: ansible_default_ipv4.address != managed_node_ip
+      when: 
+        - ansible_distribution == "RedHat"
+        - ansible_default_ipv4.address != rhel9_node_ip
 
-    - name: Ensure SSH service is running
+    - name: Set static IP on Ubuntu managed node (netplan)
+      ansible.builtin.template:
+        src: netplan_config.j2
+        dest: /etc/netplan/01-netcfg.yaml
+        mode: '0644'
+      notify: Apply netplan configuration
+      when: 
+        - ansible_distribution == "Ubuntu"
+        - ansible_default_ipv4.address != ubuntu_node_ip
+
+    - name: Ensure SSH service is running (RHEL uses sshd, Ubuntu uses ssh)
       ansible.builtin.service:
-        name: sshd
+        name: "{{ 'sshd' if ansible_distribution == 'RedHat' else 'ssh' }}"
         state: started
         enabled: yes
+      when: ansible_os_family == "Debian" or ansible_os_family == "RedHat"
 
     - name: Display node configuration
       ansible.builtin.debug:
@@ -32,3 +46,8 @@
           - "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
           - "SSH User: {{ ansible_user_id }}"
           - "SSH Port: {{ ansible_port | default(22) }}"
+
+  handlers:
+    - name: Apply netplan configuration
+      ansible.builtin.command: netplan apply
+      when: ansible_distribution == "Ubuntu"
