@@ -17,12 +17,12 @@ Before using the scripts in this subfolder, ensure the following:
 
 ## Structure
 
-- **`linux_nodes.sh`**: Bash script to configure Linux-based remote nodes for Ansible management.
-- **`windows_nodes.ps1`**: PowerShell script to configure Windows-based remote nodes for Ansible management.
+- **`config_rhel9_node.sh`**: Bash script to configure Linux-based remote nodes for Ansible management.
+- **`config_windows_node.ps1`**: PowerShell script to configure Windows-based remote nodes for Ansible management.
 
 ## Setup Instructions
 
-### 1. Linux Remote Nodes Configuration (`linux_nodes.sh`)
+### 1. Linux Remote Nodes Configuration (`config_rhel9_node.sh`)
 
 This script configures Linux remote nodes by:
 - Creating an Ansible user with sudo privileges.
@@ -30,19 +30,19 @@ This script configures Linux remote nodes by:
 - Ensuring Python is installed for Ansible compatibility.
 
 #### Usage
-1. Copy `linux_nodes.sh` to the control node or run it from the repository directory.
+1. Copy `config_rhel9_node.sh` to the control node or run it from the repository directory.
 2. Edit the script to specify the target Linux node IP addresses or hostnames and the Ansible user's credentials.
 3. Execute the script:
    ```bash
-   chmod +x linux_nodes.sh
-   ./linux_nodes.sh
+   chmod +x config_rhel9_node.sh
+   ./config_rhel9_node.sh
    ```
 4. Verify connectivity from the control node:
     ```bash
     ansible linux_nodes -m ping
     ```
 
-### 2. Windows Remote Nodes Configuration (windows_nodes.ps1)
+### 2. Windows Remote Nodes Configuration (config_windows_node.ps1)
 
 This script configures Windows remote nodes by:
 - Enabling WinRM for remote management.
@@ -50,11 +50,11 @@ This script configures Windows remote nodes by:
 - Creating a local Ansible user account (optional).
 
 #### Usage
-1. Copy windows_nodes.ps1 to the target Windows node or execute it remotely via PowerShell Remoting.
+1. Copy config_windows_node.ps1 to the target Windows node or execute it remotely via PowerShell Remoting.
 2. Run the script with elevated privileges (as Administrator):
    ```powershell
    Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-   .\windows_nodes.ps1
+   .\config_windows_node.ps1
     ```
 3. Verify connectivity from the control node:
    ```bash
